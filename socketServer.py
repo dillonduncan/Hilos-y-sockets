@@ -1,6 +1,5 @@
 import socket
 import random
-import sys
 
 #configuracion del servidor
 HOST= '127.0.0.1'
@@ -47,7 +46,7 @@ def main():
 
                         if desaciertos_seguidos>=3:
                             print("El servidor fallo 3 veces seguidas, perdiste")
-                            conn.sendall("El servidor fallo 3 veces seguidas".encode('utf-8'))
+                            conn.sendall("Perdiste. El servidor fallo 3 veces seguidas".encode('utf-8'))
                             break
 
                     except ValueError:

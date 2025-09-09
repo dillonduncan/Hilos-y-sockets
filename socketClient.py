@@ -29,3 +29,31 @@ def generar_num_aleatorio(s):
 
         time.sleep(2)#esperara 2 segundos para la siguiente ronda
 
+def main():
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST,PORT))
+            print(f"Conectado al servidor: {HOST}:{PORT}")
+
+            generar_hilo=threading.Thread(target=generar_num_aleatorio, args=(s))
+            generar_hilo.start()#iniciar el hilo para generar y enviar el numero aleatorio
+
+            while not detener_hilo.is_set():
+                user_input=input("\n Ingrese 'Terminar' para salir del juego: ").lower()
+                if user_input=="terminar":
+                    print("Enviando comando al servidor para terminar")
+                    s.sendall(user_input.encode('utf-8'))
+                    detener_hilo.set()
+                    break
+
+            generar_hilo.join()#esperar a que el hilo termine su ejecución antes de salir
+        
+    except ConnectionRefusedError:
+        print("No se pudo conectar al servidor, asegurese de que este en funcionamiento")
+    except Exception as e:
+        print(f"Error en el cliente: {e}")
+    finally:
+        print("Cliente apagandose")
+
+if __name__ == "__main__":
+    main()
